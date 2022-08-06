@@ -10,6 +10,7 @@ import pymongo
 from pymongo import MongoClient
 from bson.json_util import dumps, loads
 import time 
+import calendar
 
 MONGO_HOST = "200.48.235.251"
 MONGO_PUERTO ="27017"
@@ -28,7 +29,7 @@ def convert_formato_fecha(fec):
     print("fecha restada:", fec)
     fec_unix=int(time.mktime(fec.timetuple()))
     print("fecha calculada del anterior:", fec_unix)
-    fe_unix= datetime.timestamp(fec)*1000
+    fe_unix = calendar.timegm(date.utctimetuple())
     print("fecha nueva calculada del anterior:", fe_unix)
     if fec.month < 10:
         fec = str(fec.day)+'/0'+str(fec.month)+'/'+str(fec.year)
