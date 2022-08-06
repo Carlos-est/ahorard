@@ -25,7 +25,9 @@ def convert_formato_fecha(fec):
     fec = datetime.strptime(fec, '%d/%m/%Y')
     #restamos 1 dia que es el de consulta
     fec =fec -timedelta(1)
+    print("fecha restada:", fec)
     fec_unix=int(time.mktime(fec.timetuple()))
+    print("fecha calculada del anterior:", fec_unix)
     if fec.month < 10:
         fec = str(fec.day)+'/0'+str(fec.month)+'/'+str(fec.year)
     else:
