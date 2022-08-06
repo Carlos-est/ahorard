@@ -271,7 +271,7 @@ def viewHidrica():
 
     dict_estaciones = {"1": "AMINA", "2":"HATILLO PALMA", "3":"HATO AL MEDIO", "4":"JULIANA", 
     "5":"LA CAIDA", "6":"MAO", "7":"MONTECRISTI","8": "SAN ISIDRO"}
-    estacionName=dict_estaciones[estacion] #BUSCA LA ESTACION 
+    estacionName=dict_estaciones[estacion] #BUSCA LA ESTACION  
     session['estacionName'] = estacionName
     NH, data, evp_cultivo, Deficit  = quintaFuncion.nHidrica(int(dias),fechaFinal,int(estacion),suelo, riego) #NH esta en mm
     NH2 = round(NH*10,2) #m3
@@ -316,6 +316,7 @@ def viewHidricaDemanda():
     evap = [row[1] for row in data]
     rain = [row[2] for row in data]
     fechaFinal=data[-1][0]
+    print("fecha a verificar:", fechaFinal)
     
     return render_template('viewHidricaDemanda.html', NH= NH, NH2=NH2, fechas = fechas, evap=evap,rain=rain,data=data, estacionName = estacionName, evapoAcumulada=evapoAcumulada, fechaFinal=fechaFinal, deficit=deficit)
 
