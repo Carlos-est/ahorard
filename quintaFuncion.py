@@ -29,7 +29,7 @@ def convert_formato_fecha(fec):
     print("fecha restada:", fec)
     fec_unix=int(time.mktime(fec.timetuple()))
     print("fecha calculada del anterior:", fec_unix)
-    fe_unix = calendar.timegm(date.utctimetuple())
+    fe_unix = calendar.timegm(fec.utctimetuple())
     print("fecha nueva calculada del anterior:", fe_unix)
     if fec.month < 10:
         fec = str(fec.day)+'/0'+str(fec.month)+'/'+str(fec.year)
