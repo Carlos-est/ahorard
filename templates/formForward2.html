@@ -1,0 +1,48 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Page User {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+
+<div class="row mt-5">
+
+  <div class="col-md-2">
+          <!-- <table class ="table table-bordered table-hover">
+                  <thead>
+                      <tr>
+                         
+                          <th>Fecha</th>
+                          <th>Nro Hojas ingresado</th>
+                          <th>Opciones</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                
+                  </tbody>
+          </table> -->
+
+  </div> 
+
+  <div class="col-md-6">
+   
+      <form action="/viewForward" method="POST">
+
+          <div class="form-group">
+              <input type="text" name="fecha" placeholder="Ingrese fecha, ejemplo: 4/07/2021" class="form-control">
+
+          </div>
+          
+          <button type="submit" class="btn btn-primary"> Calcular</button>
+      </form>
+
+  </div>
+</div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}
