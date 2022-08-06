@@ -36,6 +36,9 @@ def convert_formato_fecha(fec):
 
 def BD_MONGO_RIEGO_DEMANDA(pais, estacion, fec_unix_usuario):
     fec_inicial_unix = fec_unix_usuario-7*86400
+    print("ts inicial:", fec_inicial_unix)
+    print("ts usuario:", fec_unix_usuario)
+    #fec_unix_usuario=fec_unix_usuario+86400
     
     try:
         cliente = MongoClient(MONGO_URI, serverSelectionTimeoutMS=MONGO_TIEMPO_FUERA)
@@ -83,6 +86,7 @@ def nHidricaDemanda(fec, estacion, tipo, tipo_riego):
     print("Fecha a ingresar a calculo:", fec_string_usuario)
     ##solicitamos datos
     datos=BD_MONGO_RIEGO_DEMANDA(pais, estacion, fec_unix_usuario)
+    print("datos:", datos)
     ###calculo
     ET_acc = 0
     precip_acc = 0
@@ -117,6 +121,7 @@ def nHidricaDemanda(fec, estacion, tipo, tipo_riego):
     #print("lluvia efectiva:", lluvia_efectiva)
     if Deficit <= 0:
         Deficit=0
+    print("vector grafica:", Vector_Grafica)
     return round(NH,2), Vector_Grafica, round(evp_cultivo,2), round(Deficit,2)
 
 ### funion b : hidrica

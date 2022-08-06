@@ -316,6 +316,7 @@ def viewHidricaDemanda():
     evap = [row[1] for row in data]
     rain = [row[2] for row in data]
     fechaFinal=data[-1][0]
+    print("lista de fechas:", fechas)
     print("fecha a verificar:", fechaFinal)
     
     return render_template('viewHidricaDemanda.html', NH= NH, NH2=NH2, fechas = fechas, evap=evap,rain=rain,data=data, estacionName = estacionName, evapoAcumulada=evapoAcumulada, fechaFinal=fechaFinal, deficit=deficit)
