@@ -15,7 +15,7 @@
 
     <!-- Nav Item - Dashboard -->
     <li class="nav-item active">
-        <a class="nav-link" href="/">
+        <a class="nav-link" href="/home">
             <!-- <i class="fas fa-fw fa-tachometer-alt"></i> -->
             <!-- <i class='bx fa-fw bxs-grid-alt'></i> -->
             <i class="fas fa-fw fa-compass"></i>
@@ -132,8 +132,47 @@
         </div>
     </li>
 
+
     <!-- Divider -->
     <hr class="sidebar-divider">
+
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseHelp" aria-expanded="true"
+            aria-controls="collapseUtilities">
+            <i class="fa-solid fa-circle-info"></i>
+            <span>Soporte</span>
+        </a>
+        <div id="collapseHelp" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <a class="collapse-item" href="">-Manual de funciones</a>
+            </div>
+        </div>
+    </li>
+
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseComentarios"
+            aria-expanded="true" aria-controls="collapseUtilities">
+            <i class="fa-solid fa-comment-dots"></i>
+            <span>Comentarios</span>
+        </a>
+        <div id="collapseComentarios" class="collapse" aria-labelledby="headingUtilities"
+            data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <a class="collapse-item" href="/EnviarCorreo">-Ayudanos a mejorar</a>
+            </div>
+        </div>
+    </li>
+
+    <hr class="sidebar-divider">
+
+    <li class="nav-link text-center">
+        <a href="{{ url_for('logout')}}" class="btn btn-purple" role="button">
+            <i class="fa-solid fa-right-from-bracket"></i>
+            Salir</a>
+    </li>
+    <hr class="sidebar-divider">
+
+
 
     <!-- Heading -->
     <!-- <div class="sidebar-heading">

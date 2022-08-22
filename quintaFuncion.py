@@ -8,7 +8,6 @@ from datetime import date
 #biblioteca Mongo
 import pymongo
 from pymongo import MongoClient
-from bson.json_util import dumps, loads
 import time 
 import calendar
 

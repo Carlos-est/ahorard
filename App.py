@@ -13,6 +13,11 @@ from forms import FormIndicadoresCultivo
 from forms import FormBiomasa
 from forms import FormNutrientes
 from forms import FormRiego
+from forms import LoginForm, CreateAccountForm
+from forms import  EnviarEmail
+import bcrypt
+from pymongo import MongoClient
+from flask_mail import Mail, Message
 
 from datetime import timedelta
 import datetime
@@ -36,14 +41,156 @@ app.secret_key = 'mysecretkeyRepDom'
 app.config['PERMANENT_SESSION_LIFETIME'] =  timedelta(minutes=30)
 #variables = variables()
 
+MONGO_HOST = "200.48.235.251"
+MONGO_PUERTO ="27017"
+MONGO_PWD = "ciba15153232"
+MONGO_USER = "estacionesrd"
+MONGO_TIEMPO_FUERA =10000
+MONGO_BASEDATOS = "PROYECTORD"
+MONGO_COLECCION = "users"
+MONGO_URI = "mongodb://"+ MONGO_USER +":"+ MONGO_PWD + "@"+MONGO_HOST +":" + MONGO_PUERTO + "/"+ MONGO_BASEDATOS 
+#MONGO_URI = "mongodb://"+MONGO_HOST +":" + MONGO_PUERTO + "/"
+
+#connoct to your Mongo DB database
+client = MongoClient(MONGO_URI)
+
+baseDatos = client[MONGO_BASEDATOS]
+coleccion=baseDatos[MONGO_COLECCION]
+##########################  LOGIN
+""" login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = "login"
+def is_authenticated(self):
+	return True
+
+def is_active(self):
+	return True
+
+def is_anonymous(self):
+	return False
+
+def get_id(self):
+	return str(self.id)
+
+def is_admin(self):
+	return self.admin
+@login_manager.user_loader
+def load_user(user_id):
+    user_found = coleccion.find_one({"name": nombres})
+	return Usuarios.query.get(int(user_id))
+
+ """
+#assign URLs to have a particular route 
+
+@app.route("/", methods=['post', 'get'])
+def login():
+    loginForm=LoginForm()
+    message = 'Please login to your account'
+    if "email" in session:
+        return redirect(url_for("home"))
+
+    if request.method == "POST":
+        email = request.form.get("email")
+        password = request.form.get("password")
+
+        #check if email exists in database
+        email_found = coleccion.find_one({"email": email})
+        if email_found:
+            email_val = email_found['email']
+            passwordcheck = email_found['password']
+            #encode the password and check if it matches
+            if bcrypt.checkpw(password.encode('utf-8'), passwordcheck):
+                session["email"] = email_val
+                return redirect(url_for('home'))
+            else:
+                if "email" in session:
+                    return redirect(url_for("home"))
+                message = 'Error en la contraseña'
+                return render_template('accounts/login.html', message=message, form = loginForm)
+        else:
+            message = 'Email no encontrado'
+            return render_template('accounts/login.html', message=message, form = loginForm)
+
+    
+    return render_template('accounts/login.html',form = loginForm)
+
+@app.route("/register", methods=["POST", "GET"])
+def register():
+    createAccountForm=CreateAccountForm()
+    message = ''
+    if "email" in session:
+        return redirect(url_for("home"))
+    if request.method == "POST":
+        nombres = request.form.get("nombres")
+        apellido_paterno = request.form.get("apellido_paterno")
+        apellido_materno = request.form.get("apellido_materno")
+        email = request.form.get("email")
+        ocupacion = request.form.get("ocupacion")
+        asociacion = request.form.get("asociacion")
+        password1 = request.form.get("password1")
+        password2 = request.form.get("password2")
+        #if found in database showcase that it's found 
+        user_found = coleccion.find_one({"name": nombres})
+        email_found = coleccion.find_one({"email": email})
+        if email_found:
+            message = 'Este email ya existe en la base de datos'
+            return render_template('accounts/register.html', msg=message,form=createAccountForm)
+        if password1 != password2:
+            message = 'Las contraseñas no coinciden!'
+            return render_template('accounts/register.html', msg=message,form=createAccountForm)
+        else:
+            
+            #hash the password and encode it
+            hashed = bcrypt.hashpw(password2.encode('utf-8'), bcrypt.gensalt())
+            #assing them in a dictionary in key value pairs
+            user_input = {'nombres': nombres, 
+                        'apellido_paterno': apellido_paterno, 
+                        'apellido_materno': apellido_materno,
+                        'email': email, 
+                        'ocupacion': ocupacion,
+                        'asociacion': asociacion,
+                        'password': hashed}
+            #insert it in the record collection
+            print("insert mongo:", user_input)
+            coleccion.insert_one(user_input)
+            
+            #find the new created account and its email
+            user_data = coleccion.find_one({"email": email})
+            new_email = user_data['email']
+            #if registered redirect to logged in as the registered user
+            return render_template('home.html', email=new_email)
+    return render_template('accounts/register.html', message=message,form=createAccountForm)
+
+
+@app.route("/logout", methods=["POST", "GET"])
+def logout():
+    loginForm=LoginForm()
+    if "email" in session:
+        session.pop("email", None)
+        return redirect(url_for('login'))
+    else:
+        return redirect(url_for('login'))
+
+
+@app.route('/home')
+#@login_required
+def home():
+    if "email" in session:
+        email = session["email"]
+        return render_template('home.html', email=email)
+    else:
+        return redirect(url_for("login"))
+
+
+
 @app.before_request
 def do_something_when_a_request_comes_in():
 	track_visitor()
 
-@app.route('/')
+""" @app.route('/')
 def Index():
     return render_template ('index.html')
-
+ """
 
 
 @app.route('/formIndicadoresCosecha')
@@ -422,6 +569,47 @@ def viewNroHojasNroSemanas():
     gradosDia = [row[2] for row in data]
  
     return render_template('view14NroSemanas.html', NHojas = NHojas,  data = data, fechas = fechas ,tempPromedio =tempPromedio,gradosDia = gradosDia , estacionName = estacionName, nroSemanas = nroSemanas,fechaFinal=fechaFinal)
+
+@app.route('/EnviarCorreo', methods = [ 'GET','POST'])
+def EnviarCorreo():
+    enviarEmail=EnviarEmail()
+    app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+    app.config['MAIL_PORT'] = 465
+    app.config['MAIL_USE_TLS'] = False
+    app.config['MAIL_USE_SSL'] = True
+    # MAIL_DEBUG : default app.debug
+    app.config['MAIL_USERNAME'] = 'labsac2022@gmail.com'
+    app.config['MAIL_PASSWORD'] = 'elpdxpfshttksfgh'
+    # MAIL_DEFAULT_SENDER : default None
+    # MAIL_MAX_EMAILS : default None
+    # MAIL_SUPPRESS_SEND : default app.testing
+    # MAIL_ASCII_ATTACHMENTS : default False
+    mail = Mail(app)
+    if request.method  == "POST":
+        nombres = request.form.get("nombres")
+        apellido_paterno = request.form.get("apellido_paterno")
+        apellido_materno = request.form.get("apellido_materno")
+        email = request.form.get("email")
+        asociacion = request.form.get("asociacion")
+        Dispositivo = "Laptop o Computadora"
+        mensaje = request.form.get("mensaje")
+    
+        msg = Message("Sugerencias y consultas - °AHora", sender="labsac2022@gmail.com", recipients=["labsac2022@gmail.com"])
+        msg.body = "Nombre: {} \nApellidos: {} {}\nEmail: {}\nAsociación: {}\nDispositivo remitente: {}\nMensaje:\n{}".format(nombres, apellido_paterno, apellido_materno, email, asociacion,Dispositivo, mensaje)
+        try:
+            mail.send(msg)
+            return redirect(url_for("MensajeEnviado"))
+        except:
+            return redirect(url_for("MensajeError"))
+    return render_template("EnviarCorreo.html", form=enviarEmail)
+
+@app.route('/MensajeEnviado', methods = [ 'GET','POST'])
+def MensajeEnviado():
+    return render_template("MensajeEnviado.html")
+
+@app.route('/MensajeError', methods = [ 'GET','POST'])
+def MensajeError():
+    return render_template("MensajeError.html")
 
 """ 
 @app.errorhandler(Exception)
