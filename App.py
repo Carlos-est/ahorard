@@ -611,7 +611,7 @@ def MensajeEnviado():
 def MensajeError():
     return render_template("MensajeError.html")
 
-""" 
+
 @app.errorhandler(Exception)
 def handle_exception(e):
     # pass through HTTP errors
@@ -622,7 +622,7 @@ def handle_exception(e):
     flash('Error: Verifique los datos ingresados')
     return render_template("formError.html", e=e), 500 
 
- """
+
 
 
 def track_visitor():
