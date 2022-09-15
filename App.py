@@ -63,8 +63,8 @@ coleccion=baseDatos[MONGO_COLECCION]
 #
 MONGO_COLECCION_V = "VISITAS"
 ##
-sitekey = "6LcRb6YhAAAAAAJ7DNiNPt3PrltG07uC4koUPFUY"
-secret = "6LcRb6YhAAAAALYSprVN2eXWNZvEEdRDqZdcLaMD"
+sitekey = "6Lf1bwEiAAAAAIExPT6x78sCErSAJDyO45rFjTnF"
+secret = "6Lf1bwEiAAAAAKVQ1oDhGL5rGQwot7pGzapxyG3i"
 ##########################  LOGIN
 #assign URLs to have a particular route 
 
