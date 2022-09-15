@@ -2,23 +2,9 @@ import math
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from flask_mysqldb import MySQL
 from werkzeug.exceptions import HTTPException
-
-import primeraFuncion
-import segundaFuncion
-import terceraFuncion
-import cuartaFuncion
-import quintaFuncion
-
-from forms import FormIndicadoresCultivo
-from forms import FormBiomasa
-from forms import FormNutrientes
-from forms import FormRiego
-from forms import LoginForm, CreateAccountForm
-from forms import  EnviarEmail
 import bcrypt
 from pymongo import MongoClient
 from flask_mail import Mail, Message
-
 from datetime import timedelta
 import datetime
 import config
@@ -780,7 +766,6 @@ from forms import FormNutrientes
 from forms import FormRiego
 from forms import LoginForm, CreateAccountForm
 from forms import EnviarEmail
-
 
 if __name__ == '__main__':
     app.run(port=3000, debug=True)
