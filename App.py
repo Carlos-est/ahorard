@@ -2,7 +2,7 @@ import math
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from flask_mysqldb import MySQL
 from werkzeug.exceptions import HTTPException
-import funcionesGenerales
+
 import primeraFuncion
 import segundaFuncion
 import terceraFuncion
@@ -23,10 +23,11 @@ from datetime import timedelta
 import datetime
 import config
 from datetime import datetime
+import requests, json
 
 
 app = Flask(__name__)
-
+pais =2 #COLOMBIA
 
 #MYSQL CONECTION
 app.config['MYSQL_HOST'] = 'labsac.com'
@@ -50,116 +51,214 @@ MONGO_BASEDATOS = "PROYECTORD"
 MONGO_COLECCION = "users"
 MONGO_URI = "mongodb://"+ MONGO_USER +":"+ MONGO_PWD + "@"+MONGO_HOST +":" + MONGO_PUERTO + "/"+ MONGO_BASEDATOS 
 #MONGO_URI = "mongodb://"+MONGO_HOST +":" + MONGO_PUERTO + "/"
-
-#connoct to your Mongo DB database
 client = MongoClient(MONGO_URI)
+#connoct to your Mongo DB database
+pais = 3
+# mail
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 465
+app.config['MAIL_USE_TLS'] = False
+app.config['MAIL_USE_SSL'] = True
+# MAIL_DEBUG : default app.debug
+app.config['MAIL_USERNAME'] = 'apis2back@gmail.com'
+app.config['MAIL_PASSWORD'] = 'xufdtdivychgvjnb'
+
+""" app.config['MAIL_SERVER'] = 'mail.labsac.com'
+app.config['MAIL_PORT'] = 465
+app.config['MAIL_USE_TLS'] = False
+app.config['MAIL_USE_SSL'] = True
+# MAIL_DEBUG : default app.debug
+app.config['MAIL_USERNAME'] = 'userahoracolombia@labsac.com'
+app.config['MAIL_PASSWORD'] = '1KVDAEOgK!yV' """
+
 
 baseDatos = client[MONGO_BASEDATOS]
 coleccion=baseDatos[MONGO_COLECCION]
+#
+MONGO_COLECCION_V = "VISITAS"
+##
+sitekey = "6LcRb6YhAAAAAAJ7DNiNPt3PrltG07uC4koUPFUY"
+secret = "6LcRb6YhAAAAALYSprVN2eXWNZvEEdRDqZdcLaMD"
 ##########################  LOGIN
-""" login_manager = LoginManager()
-login_manager.init_app(app)
-login_manager.login_view = "login"
-def is_authenticated(self):
-	return True
-
-def is_active(self):
-	return True
-
-def is_anonymous(self):
-	return False
-
-def get_id(self):
-	return str(self.id)
-
-def is_admin(self):
-	return self.admin
-@login_manager.user_loader
-def load_user(user_id):
-    user_found = coleccion.find_one({"name": nombres})
-	return Usuarios.query.get(int(user_id))
-
- """
 #assign URLs to have a particular route 
 
 @app.route("/", methods=['post', 'get'])
 def login():
-    loginForm=LoginForm()
+    session.permanent = True
+    loginForm = LoginForm()
     message = 'Please login to your account'
-    if "email" in session:
-        return redirect(url_for("home"))
-
     if request.method == "POST":
         email = request.form.get("email")
         password = request.form.get("password")
 
-        #check if email exists in database
+        # check if email exists in database
         email_found = coleccion.find_one({"email": email})
         if email_found:
             email_val = email_found['email']
             passwordcheck = email_found['password']
-            #encode the password and check if it matches
-            if bcrypt.checkpw(password.encode('utf-8'), passwordcheck):
-                session["email"] = email_val
-                return redirect(url_for('home'))
+            # encode the password and check if it matches
+            if type(passwordcheck) == str:
+                password = password.encode()
+                from_node_hash = passwordcheck.encode()
+                if bcrypt.hashpw(password, from_node_hash) == from_node_hash:
+                    print("Ha ingresado con cuenta de móvil al aplicativo web!!!")
+                    session["email"] = email_val
+                    coleccion_V = baseDatos[MONGO_COLECCION_V]
+                    coleccion_V.insert_one(funcionesGenerales.Visita(email))
+                    return redirect(url_for('home'))
+                else:
+                    if "email" in session:
+                        coleccion_V = baseDatos[MONGO_COLECCION_V]
+                        coleccion_V.insert_one(funcionesGenerales.Visita(email))
+                        return redirect(url_for("home"))
+                    message = 'Error en la contraseña'
+                    return render_template('accounts/login.html', message=message, form=loginForm)
             else:
-                if "email" in session:
-                    return redirect(url_for("home"))
-                message = 'Error en la contraseña'
-                return render_template('accounts/login.html', message=message, form = loginForm)
+                if bcrypt.checkpw(password.encode('utf-8'), passwordcheck):
+                    session["email"] = email_val
+                    coleccion_V = baseDatos[MONGO_COLECCION_V]
+                    coleccion_V.insert_one(funcionesGenerales.Visita(email))
+                    return redirect(url_for('home'))
+                else:
+                    if "email" in session:
+                        # hay que iinsertar un JSON para contabilizar las visitas.
+                        coleccion_V = baseDatos[MONGO_COLECCION_V]
+                        coleccion_V.insert_one(funcionesGenerales.Visita(email))
+                        return redirect(url_for("home"))
+                    message = 'Error en la contraseña'
+                    return render_template('accounts/login.html', message=message, form=loginForm)
         else:
             message = 'Email no encontrado'
-            return render_template('accounts/login.html', message=message, form = loginForm)
+            return render_template('accounts/login.html', message=message, form=loginForm)
 
-    
-    return render_template('accounts/login.html',form = loginForm)
+    return render_template('accounts/login.html', form=loginForm)
 
 @app.route("/register", methods=["POST", "GET"])
 def register():
-    createAccountForm=CreateAccountForm()
+    form = CreateAccountForm()
     message = ''
-    if "email" in session:
-        return redirect(url_for("home"))
     if request.method == "POST":
         nombres = request.form.get("nombres")
         apellido_paterno = request.form.get("apellido_paterno")
         apellido_materno = request.form.get("apellido_materno")
         email = request.form.get("email")
+        session["email"] = email
+        fecNacimiento = request.form.get("fecNacimiento")
         ocupacion = request.form.get("ocupacion")
         asociacion = request.form.get("asociacion")
         password1 = request.form.get("password1")
         password2 = request.form.get("password2")
-        #if found in database showcase that it's found 
-        user_found = coleccion.find_one({"name": nombres})
+        captcha_response = request.form['g-recaptcha-response']
+        
+        if is_human(captcha_response):
+            # if found in database showcase that it's found
+            user_found = coleccion.find_one({"name": nombres})
+            email_found = coleccion.find_one({"email": email})
+            if email_found:
+                #str(email_found["email"]) == email
+                message = 'Este email ya existe en la base de datos'
+                return render_template('accounts/register.html', message=message, form=form, sitekey=sitekey)
+            
+            if password1 != password2:
+                message = 'Las contraseñas no coinciden!'
+                return render_template('accounts/register.html', message=message, form=form, sitekey=sitekey)
+            else:
+                # hash the password and encode it
+                hashed = bcrypt.hashpw(
+                    password2.encode('utf-8'), bcrypt.gensalt())
+                # assing them in a dictionary in key value pairs
+                user_input = {'nombres': nombres,
+                                'apellido_paterno': apellido_paterno,
+                                'apellido_materno': apellido_materno,
+                                'email': email,
+                                'fecNacimiento': fecNacimiento,
+                                'ocupacion': ocupacion,
+                                'asociacion': asociacion,
+                                'password': hashed}
+                # insert it in the record collection
+                print("insert mongo:", user_input)
+                coleccion.insert_one(user_input)
+
+                # find the new created account and its email
+                user_data = coleccion.find_one({"email": email})
+                new_email = user_data['email']
+                # if registered redirect to logged in as the registered user
+                coleccion_V = baseDatos[MONGO_COLECCION_V]
+                coleccion_V.insert_one(funcionesGenerales.Visita(email))
+                return render_template('home.html', email=new_email)
+        else:
+             # Log invalid attempts
+            flash("Por favor llenar todos los campos")     
+    return render_template('accounts/register.html', message=message, form=form, sitekey=sitekey)
+
+def is_human(captcha_response):
+    payload = {'response':captcha_response, 'secret':secret}
+    response = requests.post("https://www.google.com/recaptcha/api/siteverify", payload)
+    response_text = json.loads(response.text)
+    respuesta_captacha = response_text['success']
+    print("Respuesta chpcha:", respuesta_captacha)
+    return response_text['success']
+
+@app.route("/ReContraseña", methods=["POST", "GET"])
+def ReContraseña():
+    loginForm = LoginForm()
+    if request.method == "POST":
+        email = request.form.get("email")
+        # actualizar contraseña
+        # check if email exists in database
         email_found = coleccion.find_one({"email": email})
         if email_found:
-            message = 'Este email ya existe en la base de datos'
-            return render_template('accounts/register.html', msg=message,form=createAccountForm)
-        if password1 != password2:
-            message = 'Las contraseñas no coinciden!'
-            return render_template('accounts/register.html', msg=message,form=createAccountForm)
+            email_val = email_found['email']
+            print("email_found:", email_found)
+            print("email_val:", email_val)
+            passwordcheck = email_found['password']
+            print("passwordcheck:", passwordcheck)
+            # actualizamos en base de datos
+            password = funcionesGenerales.generate_random_string()
+            # hash the password and encode it
+            hashed = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+            coleccion.update_one({"email": email}, {
+                                 "$set": {"password": hashed}})
+            print("Se ha actualizado")
+            # enviamos el password a correo electronico del remitente
+            mail = Mail(app)
+
+            msg = Message("Cambio de contraseña -Aplicativo °AHora",
+                          sender="apis2back@gmail.com", recipients=["{}".format(email)])
+            msg.body = "Se ha cambiado su contraseña de manera exitosa. Por favor se recomienda cambiar a una contraseña que recuerde, ya que la contraseña que se le ha asignado es temporal, esto lo puede realizar en la opción 'Usuario' \nContraseña: {}".format(password)
+            print("mensaje anexado")
+            try:
+                mail.send(msg)
+                flash("Mensaje enviado correctamente. Por favor revisar su gmail!")
+                return redirect(url_for("login"))
+            except:
+                flash("mensaje no enviado")
+                return redirect(url_for("login"))
+
         else:
+            flash("email no encontrado")
+    return redirect(url_for("login"))
+
+
+@app.route("/ActContraseña", methods=["POST", "GET"])
+def ActContraseña():
+    if request.method == "POST":
+        password1 = request.form.get("password1")
+        password2 = request.form.get("password2")
+        email = session["email"]
+        if password1 != password2:
+            flash('Las contraseñas no coinciden!')
+            return redirect(url_for("usuario")) 
+        else:
+            # hash the password and encode it
+            hashed = bcrypt.hashpw(
+                password2.encode('utf-8'), bcrypt.gensalt())
             
-            #hash the password and encode it
-            hashed = bcrypt.hashpw(password2.encode('utf-8'), bcrypt.gensalt())
-            #assing them in a dictionary in key value pairs
-            user_input = {'nombres': nombres, 
-                        'apellido_paterno': apellido_paterno, 
-                        'apellido_materno': apellido_materno,
-                        'email': email, 
-                        'ocupacion': ocupacion,
-                        'asociacion': asociacion,
-                        'password': hashed}
-            #insert it in the record collection
-            print("insert mongo:", user_input)
-            coleccion.insert_one(user_input)
-            
-            #find the new created account and its email
-            user_data = coleccion.find_one({"email": email})
-            new_email = user_data['email']
-            #if registered redirect to logged in as the registered user
-            return render_template('home.html', email=new_email)
-    return render_template('accounts/register.html', message=message,form=createAccountForm)
+            coleccion.update_one({"email": email}, {
+                                 "$set": {"password": hashed}})
+            flash("La contraseña fue actualizada correctamente")
+        return redirect(url_for("usuario"))
+
 
 
 @app.route("/logout", methods=["POST", "GET"])
@@ -171,6 +270,32 @@ def logout():
     else:
         return redirect(url_for('login'))
 
+@app.route('/usuario')
+def usuario():
+    form = LoginForm()
+    email = session["email"]
+    datos = coleccion.find_one({"email": email})
+    nombres = datos["nombres"] + " " + \
+        datos["apellido_paterno"] + " " + datos["apellido_materno"]
+    ocupacion = datos["ocupacion"]
+    asociacion = datos["asociacion"]
+    fecNacimiento = datos["fecNacimiento"]
+    if "/" in fecNacimiento:
+        dl1 = fecNacimiento.split("/")
+        d1 = int(dl1[0])
+        m1 = int(dl1[1])
+        if d1 < 10:
+            day = "0" + str(d1)
+        else:
+            day = str(d1)
+        if m1 < 10:
+            month = "0" + str(m1)
+        else:
+            month = str(m1)
+        newdate = dl1[2] + "-" + month + "-" + day
+    else:
+        newdate = fecNacimiento
+    return render_template("usuario.html", nombres=nombres, ocupacion=ocupacion, asociacion=asociacion, email=email, fecNacimiento=newdate, form =form)
 
 @app.route('/home')
 #@login_required
@@ -180,18 +305,6 @@ def home():
         return render_template('home.html', email=email)
     else:
         return redirect(url_for("login"))
-
-
-
-@app.before_request
-def do_something_when_a_request_comes_in():
-	track_visitor()
-
-""" @app.route('/')
-def Index():
-    return render_template ('index.html')
- """
-
 
 @app.route('/formIndicadoresCosecha')
 def formIndicadoresCosecha():
@@ -569,39 +682,59 @@ def viewNroHojasNroSemanas():
     gradosDia = [row[2] for row in data]
  
     return render_template('view14NroSemanas.html', NHojas = NHojas,  data = data, fechas = fechas ,tempPromedio =tempPromedio,gradosDia = gradosDia , estacionName = estacionName, nroSemanas = nroSemanas,fechaFinal=fechaFinal)
+@app.route('/EstacionesEstado')
+def estaciones_estado():
+    cantidad_Estaciones, Registro_Estaciones = funcionesGenerales.estado_estaciones(pais)
+    Id_estacion = [row[0] for row in Registro_Estaciones]
+    Nombre_esacion = [row[1] for row in Registro_Estaciones]
+    Fecha_ultima_act = [row[2] for row in Registro_Estaciones]  
+    session['cantidad_Estaciones'] = cantidad_Estaciones
+    session['Id_estacion'] = str(Id_estacion)
+    session['Nombre_esacion'] = str(Nombre_esacion)
+    session['Fecha_ultima_act'] = Fecha_ultima_act
 
-@app.route('/EnviarCorreo', methods = [ 'GET','POST'])
+    return render_template("estado_estaciones.html", cantidad_Estaciones=cantidad_Estaciones,Id_estacion=Id_estacion,Nombre_esacion=Nombre_esacion,Fecha_ultima_act=Fecha_ultima_act, Registro_Estaciones=Registro_Estaciones)
+
+
+
+
+@app.route('/EnviarCorreo', methods=['GET', 'POST'])
 def EnviarCorreo():
-    enviarEmail=EnviarEmail()
-    app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-    app.config['MAIL_PORT'] = 465
-    app.config['MAIL_USE_TLS'] = False
-    app.config['MAIL_USE_SSL'] = True
-    # MAIL_DEBUG : default app.debug
-    app.config['MAIL_USERNAME'] = 'labsac2022@gmail.com'
-    app.config['MAIL_PASSWORD'] = 'elpdxpfshttksfgh'
     # MAIL_DEFAULT_SENDER : default None
     # MAIL_MAX_EMAILS : default None
     # MAIL_SUPPRESS_SEND : default app.testing
     # MAIL_ASCII_ATTACHMENTS : default False
     mail = Mail(app)
-    if request.method  == "POST":
-        nombres = request.form.get("nombres")
-        apellido_paterno = request.form.get("apellido_paterno")
-        apellido_materno = request.form.get("apellido_materno")
-        email = request.form.get("email")
-        asociacion = request.form.get("asociacion")
-        Dispositivo = "Laptop o Computadora"
+    form = EnviarEmail()
+
+    email = session["email"]
+    datos = coleccion.find_one({"email": email})
+    nombre = datos["nombres"]
+    apellido_paterno = datos["apellido_paterno"]
+    apellido_materno = datos["apellido_materno"]
+    Dispositivo = "Laptop o Computadora"
+    asociacion = datos["asociacion"]
+    nombres = nombre + " " + apellido_paterno + " " + apellido_materno
+    if request.method == "POST":
         mensaje = request.form.get("mensaje")
+        captcha_response = request.form['g-recaptcha-response']
+        if is_human(captcha_response):       
+            msg = Message("Sugerencias y consultas - °AHora",
+                        sender="apis2back@gmail.com", recipients=["apis2back@gmail.com"])
+            msg.body = "Nombre: {} \nApellidos: {} {}\nEmail: {}\nAsociación: {}\nDispositivo remitente: {}\nMensaje:\n{}".format(
+                nombre, apellido_paterno, apellido_materno, email, asociacion, Dispositivo, mensaje)
+            print("mensaje anexado")
+            try:
+                mail.send(msg)
+                print("mensaje enviado")
+                return redirect(url_for("MensajeEnviado"))
+            except:
+                print("mensaje no enviado")
+                return redirect(url_for("MensajeError"))
+        else:
+            flash("Por favor llenar todos los campos") 
     
-        msg = Message("Sugerencias y consultas - °AHora", sender="labsac2022@gmail.com", recipients=["labsac2022@gmail.com"])
-        msg.body = "Nombre: {} \nApellidos: {} {}\nEmail: {}\nAsociación: {}\nDispositivo remitente: {}\nMensaje:\n{}".format(nombres, apellido_paterno, apellido_materno, email, asociacion,Dispositivo, mensaje)
-        try:
-            mail.send(msg)
-            return redirect(url_for("MensajeEnviado"))
-        except:
-            return redirect(url_for("MensajeError"))
-    return render_template("EnviarCorreo.html", form=enviarEmail)
+    return render_template("EnviarCorreo.html", form=form,sitekey=sitekey, nombres=nombres, asociacion=asociacion, email=email)
 
 @app.route('/MensajeEnviado', methods = [ 'GET','POST'])
 def MensajeEnviado():
@@ -623,116 +756,31 @@ def handle_exception(e):
     return render_template("formError.html", e=e), 500 
 
 
+@app.before_request
+def antes_de_cada_peticion():
+    ruta = request.path
+    print("ruta solicitada:", ruta)
+    if not "email" in session  and ruta != "/login" and ruta != "/register"and ruta != "/" and ruta != "/logout"  and ruta != "/ReContraseña" and '/static/' not in ruta:
+        print("ruta solicitada en if:", ruta)
+        print("No se ha iniciado sesión")
+        flash("Inicia sesión para continuar")
+        return redirect(url_for('login'))
+    else:
+        print("funcionamiento correcto")
 
+import funcionesGenerales
+import primeraFuncion
+import segundaFuncion
+import terceraFuncion
+import cuartaFuncion
+import quintaFuncion
+from forms import FormIndicadoresCultivo
+from forms import FormBiomasa
+from forms import FormNutrientes
+from forms import FormRiego
+from forms import LoginForm, CreateAccountForm
+from forms import EnviarEmail
 
-def track_visitor():
- print("Estoy en Visitor")
- if not config.is_tracking_allowed():
-	 	#print("primer if")
-        return
- else:
-        print("else....")		
-        ip_address = request.remote_addr
-        requested_url = request.url
-        referer_page = request.referrer
-        page_name = request.path
-        query_string = request.query_string
-        user_agent = request.user_agent.string
-                
-        if config.track_session():
-            log_id = session['log_id'] if 'log_id' in session else 0
-            no_of_visits = session['no_of_visits']
-            current_page = request.url
-            previous_page = session['current_page'] if 'current_page' in session else ''
-            
-            if previous_page != current_page:
-                
-                log_visitor(ip_address, requested_url, referer_page, page_name, query_string, user_agent, no_of_visits)
-        else:			
-            # conn = None
-            cursor = None
-            
-            session.modified = True
-            
-            try:				
-                #conn = mysql.connect()
-                # conn = mysql.connection()
-                # cursor = conn.cursor()
-                cursor = mysql.connection.cursor()
-                
-                log_id = log_visitor(ip_address, requested_url, referer_page, page_name, query_string, user_agent)
-                
-                #print('log_id', log_id)
-                
-                if log_id > 0:				
-                    sql = 'select max(no_of_visits) as next from visits_log_peru limit 1'
-                    
-                    # conn = mysql.connect()
-                    # conn = mysql.connection()
-                    #cursor = mysql.connection.cursor(pymysql.cursors.DictCursor)
-                    cursor = mysql.connection.cursor()
-                    
-                    cursor.execute(sql)
-                    row = cursor.fetchone()
-                    
-                    count = 0
-                    if row['next']:
-                        count += 1
-                    else:
-                        count = 1
-                    
-                    sql = 'UPDATE visits_log_peru set no_of_visits = %s WHERE log_id = %s'
-                    data = (count, log_id,)
-                    
-                    cursor.execute(sql, data)
-                    
-                    # conn.commit()
-                    mysql.connection.commit()
-                    
-                    session['track_session'] = True
-                    session['no_of_visits'] = count
-                    session['current_page'] = requested_url				
-                else:
-                    session['track_session'] = False
-            except Exception as e:
-                print(e)
-                session['track_session'] = False
-            finally:
-                cursor.close()
-                # conn.close()
-				
-def log_visitor(ip_address, requested_url, referer_page, page_name, query_string, user_agent, no_of_visits=None):
-	sql = None
-	data = None
-	conn = None
-	cursor = None
-	log_id = 0
-	
-	print("Voy a insertar")
-	if no_of_visits == None:
-		sql = "INSERT INTO visits_log_peru(no_of_visits, ip_address, requested_url, referer_page, page_name, query_string, user_agent) VALUES(%s, %s, %s, %s, %s, %s, %s)"
-		data = (no_of_visits, ip_address, requested_url, referer_page, page_name, query_string, user_agent,)
-	else:
-		sql = "INSERT INTO visits_log_peru(ip_address, requested_url, referer_page, page_name, query_string, user_agent) VALUES(%s, %s, %s, %s, %s, %s)"
-		data = (ip_address, requested_url, referer_page, page_name, query_string, user_agent,)
-	
-	try:				
-		# conn = mysql.connect()
-		# conn = mysql.connection()
-		cursor = mysql.connection.cursor()
-		
-		cursor.execute(sql, data)
-		
-		mysql.connection.commit()
-		
-		log_id = cursor.lastrowid
-		
-		return log_id
-	except Exception as e:
-		print(e)
-	finally:
-		cursor.close()
-		# conn.close()
 
 if __name__ == '__main__':
     app.run(port=3000, debug=True)

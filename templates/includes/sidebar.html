@@ -14,15 +14,22 @@
     <hr class="sidebar-divider my-0">
 
     <!-- Nav Item - Dashboard -->
-    <li class="nav-item active">
-        <a class="nav-link" href="/home">
-            <!-- <i class="fas fa-fw fa-tachometer-alt"></i> -->
-            <!-- <i class='bx fa-fw bxs-grid-alt'></i> -->
-            <i class="fas fa-fw fa-compass"></i>
-            <!-- <i class="fas fa-fw fa-th-large"></i> -->
-            <span>Inicio</span>
-        </a>
-    </li>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col">
+                <a class="nav-link" style="color: white;" href="/home">
+                    <i class="fa-solid fa-compass"></i>
+                    <span>Inicio</span>
+                </a>
+            </div>
+            <div class="col">
+                <a class="nav-link" style="color: white;" href="/usuario">
+                    <i class="fa-solid fa-user"></i>
+                    <span>Usuario</span>
+                </a>
+            </div>
+        </div>
+    </div>
 
     <!-- Divider -->
     <hr class="sidebar-divider">
@@ -101,7 +108,7 @@
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">Cálculo de:</h6>
                 <!-- <a class="collapse-item" href="buttons.html">-GDS hacia atrás</a> -->
-                <a class="collapse-item" href="/formNutrientes">-Cantidad de <br> Nutrientes (N, P, K, Ca...)</a>
+                <a class="collapse-item" href="/formNutrientes">-Cantidad de <br> Nutrientes (N, P, K)</a>
                 <!-- <a class="collapse-item" href="/formIndicadoresFloracion">-Fecha de floración</a> -->
             </div>
         </div>
@@ -144,12 +151,14 @@
         </a>
         <div id="collapseHelp" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item" href="">-Manual de funciones</a>
+                <a class="collapse-item" href="/home">-Manual de funciones</a>
+                <a class="collapse-item" href="/EstacionesEstado">-Estado de estaciones</a>
+                <a class="collapse-item" href="/EnviarCorreo">-Ayudanos a mejorar</a>
             </div>
         </div>
     </li>
 
-    <li class="nav-item">
+    <!-- <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseComentarios"
             aria-expanded="true" aria-controls="collapseUtilities">
             <i class="fa-solid fa-comment-dots"></i>
@@ -161,7 +170,7 @@
                 <a class="collapse-item" href="/EnviarCorreo">-Ayudanos a mejorar</a>
             </div>
         </div>
-    </li>
+    </li> -->
 
     <hr class="sidebar-divider">
 

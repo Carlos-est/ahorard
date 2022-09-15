@@ -14,7 +14,8 @@ class LoginForm(FlaskForm):
     password = PasswordField('Password',
                              id='pwd_login',
                              validators=[DataRequired()])
-
+    password1 = PasswordField('Contraseña', validators=[DataRequired()])
+    password2 = PasswordField('Repite contraseña', validators=[DataRequired()])
 
 class CreateAccountForm(FlaskForm):
     nombres = StringField('Nombres:',
@@ -32,6 +33,7 @@ class CreateAccountForm(FlaskForm):
     email = StringField('Email',
                       id='email_create',
                       validators=[DataRequired(), Email()])
+    fecNacimiento = DateField('Fecha de nacimiento:', format='%Y-%m-%d', validators=(DataRequired(),))
 
     ocupacion = StringField('Ocupación:',
                       id='ocupacion_create',

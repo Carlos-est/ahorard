@@ -31,6 +31,16 @@
                 {% endif %}
               </p>
             </div>
+            <div class="container text-white text-center">
+              {% for message in get_flashed_messages() %}
+              <div class="alert alert-danger">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                {{ message }}
+              </div>
+              {% endfor %}
+
+              {% block page_content %}{% endblock %}
+            </div>
           </div>
           <div class="card-body">
 
@@ -46,59 +56,62 @@
 
             {% else %}
 
-            <form role="form text-left" method="post" action="">
-
+            {{ form.hidden_tag() }}
+            <div class="row">
+              <div class="col">
+                <label for="input1" class="form-label">
+                  Nombres:
+                </label>
+                <input class="form-control" id="input1" type="text" name="nombre_apellido" value=" {{nombres}} "
+                  disabled>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <label for="input2" class="form-label">
+                  Correo electrónico:
+                </label>
+                <input class="form-control" id="input2" type="email" name="email" value=" {{email}} " disabled>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <label for="input3" class="form-label">
+                  Asociación:
+                </label>
+                <input class="form-control" id="input3" type="text" name="asociacion" value=" {{asociacion}} " disabled>
+              </div>
+            </div>
+            <form role="form text-left" method="post" action="{{ url_for('EnviarCorreo') }} ">
               {{ form.hidden_tag() }}
-
-              <label>Nombres:</label>
-              <div class="mb-3">
-                {{ form.nombres(placeholder="Nombres completos", class="form-control") }}
-              </div>
-              <label>Apellidos paterno</label>
-              <div class="mb-3">
-                {{ form.apellido_paterno(placeholder="Apellido paterno", class="form-control") }}
-              </div>
-              <label>Apellido materno</label>
-              <div class="mb-3">
-                {{ form.apellido_materno(placeholder="Apellido materno", class="form-control") }}
+              <div class="row">
+                <div class="col">
+                  <label for="mensaje" class="form-label">
+                    Mensaje:
+                  </label>
+                  <textarea class="form-control" name="mensaje" id="mensaje" cols="30" rows="5"
+                    aria-label="With textarea" maxlength="500" required></textarea>
+                </div>
               </div>
 
-              <label>Email</label>
-              <div class="mb-3">
-                {{ form.email(placeholder="ejemplo@gmail.com", class="input form-control", type="email") }}
-              </div>
-      
-              <label>Asociación</label>
-              <div class="mb-3">
-                {{ form.asociacion(placeholder="Asociación o cooperativa", class="form-control") }}
-              </div>
+              <div class="g-recaptcha"
+                style="transform: scale(0.7); -webkit-transform: scale(0.7); transform-origin: 0 0; -webkit-transform-origin: 0 0;"
+                data-theme="light" width="desired_width" data-sitekey="{{sitekey}}"></div>
 
-              <label>Mensaje</label>
-              <div class="mb-3">
-                {{ form.mensaje(placeholder="El mensaje debe tener como máximo 150 carácteres", class="form-control") }}
-              </div>
 
               <div class="text-center">
                 <button type="submit" name="register" class="btn text-white w-100 my-4 mb-2"
-                  style="background-color: #9c27b0;">ENVIAR</button>
+                  style="background-color: #9c27b0;">ENVIAR </button>
               </div>
-
-              <!-- <p class="text-sm mt-3 mb-0 text-center">
-                ¿Ya tienes una cuenta? <a href="/" class="text-dark font-weight-bolder">INICIAR SESIÓN</a>
-              </p>
-              -->
             </form>
 
             {% endif %}
-
-
-
           </div>
         </div>
       </div>
     </div>
   </div>
-
+</div>
 </div>
 {% endblock content %}
 
