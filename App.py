@@ -47,7 +47,7 @@ app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
 # MAIL_DEBUG : default app.debug
 app.config['MAIL_USERNAME'] = 'apis2back@gmail.com'
-app.config['MAIL_PASSWORD'] = 'xufdtdivychgvjnb'
+app.config['MAIL_PASSWORD'] = 'bgjqofsrolmpjftf'
 
 """ app.config['MAIL_SERVER'] = 'mail.labsac.com'
 app.config['MAIL_PORT'] = 465
@@ -203,8 +203,6 @@ def ReContraseña():
             password = funcionesGenerales.generate_random_string()
             # hash the password and encode it
             hashed = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
-            coleccion.update_one({"email": email}, {
-                                 "$set": {"password": hashed}})
             print("Se ha actualizado")
             # enviamos el password a correo electronico del remitente
             mail = Mail(app)
@@ -215,6 +213,8 @@ def ReContraseña():
             print("mensaje anexado")
             try:
                 mail.send(msg)
+                coleccion.update_one({"email": email}, {
+                                 "$set": {"password": hashed}})
                 flash("Mensaje enviado correctamente. Por favor revisar su gmail!")
                 return redirect(url_for("login"))
             except:
