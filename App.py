@@ -13,7 +13,7 @@ import requests, json
 
 
 app = Flask(__name__)
-pais =2 #COLOMBIA
+pais =3 #RD
 
 #MYSQL CONECTION
 app.config['MYSQL_HOST'] = 'labsac.com'
@@ -39,7 +39,6 @@ MONGO_URI = "mongodb://"+ MONGO_USER +":"+ MONGO_PWD + "@"+MONGO_HOST +":" + MON
 #MONGO_URI = "mongodb://"+MONGO_HOST +":" + MONGO_PUERTO + "/"
 client = MongoClient(MONGO_URI)
 #connoct to your Mongo DB database
-pais = 3
 # mail
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 465
