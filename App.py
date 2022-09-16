@@ -218,7 +218,8 @@ def ReContraseña():
                 flash("Mensaje enviado correctamente. Por favor revisar su gmail!")
                 return redirect(url_for("login"))
             except:
-                flash("mensaje no enviado")
+                flash("Mensaje no enviado.")
+                flash("¡Por favor intentar más tarde!")
                 return redirect(url_for("login"))
 
         else:
