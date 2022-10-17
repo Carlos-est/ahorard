@@ -21,7 +21,9 @@
         <div class="col-md-12">
           <div class="card text-center">
             <div class="card-header card-header-primary">
-              <h4 class="card-title">Información</h4>
+              <h4 class="card-title">Duración en semanas para formación de racimo
+                y fecha estimada de floración para cumplir con un mínimo de 900 grados días.
+                </h4>
             </div>
           </div>
         </div>
@@ -29,9 +31,9 @@
       <div class="col-md-12 flex-column">
         <div class="alert alert-success alert-dismissible fade show p-2" role="alert">
           <h5>
-            Tomando como fecha de cosecha el {{fechaCosecha}}, se estima que la fecha aproximada de floración fue el
-            {{fecha_floracion}}.
-            Se acumularon {{GDA}} grados día en {{nSemanas}} semanas.
+            Tomando como fecha de cosecha el {{fechaCosecha}}, se calcularon una acumulación
+            de {{GDA}} grados día en {{nSemanas}} semanas a partir de una fecha estimada de floración
+            del {{fecha_floracion}}.
           </h5>
         </div>
       </div>
@@ -61,7 +63,7 @@
 
               {
 
-                label: "Temperatura promedio",
+                label: "Temperatura promedio diario",
                 data: {{ tempPromedioBackward| safe}},
               fill: false,
               borderColor: 'blue',
@@ -292,7 +294,7 @@
             <thead>
               <tr>
                 <td>Fecha</td>
-                <td>Temperatura promedio</td>
+                <td>Temperatura promedio diario</td>
               </tr>
 
             <tbody>
@@ -347,7 +349,7 @@
 
               {
 
-                label: "Temperatura promedio",
+                label: "Temperatura promedio diario",
                 data: {{ tempPromedioBackward| safe}},
               fill: false,
               borderColor: 'blue',

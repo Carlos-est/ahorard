@@ -12,18 +12,19 @@
   {% include 'includes/topbarHide.html' %}
 
   <div class="card">
-    <div class="card-header text-center">
-      <h3 class="card-title">Cantidad de agua a aplicar en riego en los últimos {{dias}} días - Estación
-        {{estacionName}} </h3>
-    </div>
+    <!-- <div class="card-header text-center">
+      <h3 class="card-title">Cantidad de agua a aplicar en riego en los últimos {{dias}} días - Estación {{estacionName}} </h3>
+    </div> -->
     <div class="card-body">
-      <h6 class="card-title">Cálculo en función de la evapotranspiración potencial diario en mm o m<sup>3</sup></h6>
+      <!-- <h6 class="card-title">Cálculo en función de la evapotranspiración potencial diario en mm o m<sup>3</sup></h6> -->
       <div class="row">
         <div class="col-md-12">
           <div class="card text-center">
             <div class="card-header card-header-primary">
-              <h5 class="card-title">¿He regado bien en los últimos {{dias}} días para tener al bananal sin
-                restricciones hídricas?</h5>
+              <h3 class="card-title">Volumen de agua a aplicar en un riego en intervalo de {{dias}} días - Estación
+                {{estacionName}} </h3>
+              <h4 class="card-title">Cálculo en función de agua que faltó y la eficiencia de riego en mm o m<sup>3</sup></h4>
+              <h5 class="card-title">¿He regado bien para tener el cultivo sin restricciones de agua?</h5>
               <p class="card-category"></p>
             </div>
           </div>

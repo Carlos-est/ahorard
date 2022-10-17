@@ -36,7 +36,7 @@
 
     <!-- Heading -->
     <div class="sidebar-heading">
-        Variable Agroclima
+        Seleccionar indicador
     </div>
 
     <!-- Nav Item - VARIABLES Collapse Menu -->
@@ -45,7 +45,7 @@
             aria-controls="collapseTwo">
             <!-- <i class='bx fa-fw bxs-leaf'></i> -->
             <i class="fas fa-fw fa-feather-alt"></i>
-            <span>N° de hojas</span>
+            <span>Emisión de hojas</span>
         </a>
         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
@@ -63,14 +63,17 @@
             <i class="fas fa-fw fa-temperature-low"></i>
             <!-- <span>Components</span> -->
             <!-- <span>Grados Día (GDS)</span> -->
-            <span>Floración a Cosecha</span>
+            <span>Formación de racimo</span>
         </a>
         <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <!-- <h6 class="collapse-header">Cálculo con:</h6> -->
                 <!-- <a class="collapse-item" href="buttons.html">-GDS hacia atrás</a> -->
-                <a class="collapse-item" href="/formIndicadoresCosecha">- Estimación fecha de <br> floración</a>
-                <a class="collapse-item" href="/formIndicadoresFloracion">- Estimación fecha de <br> cosecha</a>
+                <a class="collapse-item" href="/formIndicadoresCosecha">- Duracion semanas de <br> cosecha a
+                    floracion <br> (hacia atras)
+                </a>
+                <a class="collapse-item" href="/formIndicadoresFloracion">- Proyeccion semanas de <br> floracion a
+                    cosecha <br> (hacia futuro)</a>
             </div>
         </div>
     </li>
@@ -81,12 +84,12 @@
             aria-controls="collapseBiom">
             <!-- <i class="fa-solid fa-seedling"></i> -->
             <i class="fa-solid fa-scale-balanced"></i>
-            <span>Racimo</span>
+            <span>Peso racimo</span>
         </a>
         <div id="collapseBiom" class="collapse" aria-labelledby="headingBiom" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">CÁLCULO DE:</h6>
-                <a class="collapse-item" href="/formBiomasa">-Peso de Racimo</a>
+                <a class="collapse-item" href="/formBiomasa">-Peso potencial de <br> racimo</a>
                 <!-- <a class="collapse-item" href="/formBiomasaProyeccion">-Proyección</a> -->
             </div>
         </div>
@@ -102,13 +105,13 @@
             <i class="fa-solid fa-seedling"></i>
             <!-- <span>Components</span> -->
             <!-- <span>Grados Día (GDS)</span> -->
-            <span>Nutrientes</span>
+            <span>Nutrientes hacia <br> potencial</span>
         </a>
         <div id="collapseFeed" class="collapse" aria-labelledby="headingFeed" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">Cálculo de:</h6>
                 <!-- <a class="collapse-item" href="buttons.html">-GDS hacia atrás</a> -->
-                <a class="collapse-item" href="/formNutrientes">-Cantidad de <br> Nutrientes (N, P, K)</a>
+                <a class="collapse-item" href="/formNutrientes">-Cantidad de (N, P, K) <br> para cubrir nutrientes <br> saliendo en racimos <br> peso potencial</a>
                 <!-- <a class="collapse-item" href="/formIndicadoresFloracion">-Fecha de floración</a> -->
             </div>
         </div>
@@ -124,7 +127,7 @@
             <!-- <i class="fas fa-fw fa-ruler"></i> -->
             <!-- <i class="fas fa-fw fa-cloud-sun-rain"></i> -->
             <!-- <i class='bx fa-fw bxs-tachometer'></i> -->
-            <span>Riego</span>
+            <span>Agua y riego</span>
         </a>
         <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">

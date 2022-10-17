@@ -25,7 +25,7 @@
         <div class="col-md-12">
           <div class="card text-center">
             <div class="card-header card-header-primary">
-              <h5 class="card-title">Información</h5>
+              <h5 class="card-title">Estimación de semanas a una cosecha futura según la acumulación de grados días de la fecha de floración</h5>
               <p class="card-category"></p>
             </div>
           </div>
@@ -33,8 +33,8 @@
       </div>
       <div class="col-md-12 flex-column">
         <div class="alert alert-success alert-dismissible fade show text-justify p-2" role="alert">
-          <h5>Faltan <strong>{{estimacion}}</strong> días (aprox. <strong>{{nroSemanas}}</strong> semanas) para la
-            fecha óptima de cosecha o sea <strong>{{semana_total}}</strong> semanas de floración a cosecha. La
+          <h5>Faltan aprox. <strong>{{nroSemanas}}</strong> semanas (<strong>{{estimacion}}</strong> días) para la
+            fecha óptima de cosecha <strong>{{valor3}}</strong> o sea <strong>{{semana_total}}</strong> semanas de floración a cosecha. La
             temperatura proyectada para las semanas que faltan es de <strong>{{temperatura}} °C.
           </h5>
         </div>
@@ -43,12 +43,12 @@
   </div>
 
   <div class="row justify-content-center">
-    <h6 class="card-title">Variación de temperatura y acumulación de grados día, desde floración
-      {{valor2}} hasta {{valor3}}.</h6>
+    <h5 class="card-title text-center">Variación de temperatura y acumulación de grados día, desde floración
+      {{valor2}} hasta {{valor3}}.</h5>
     <div class="col-md-4">
       <div class="card text-center">
         <div class="card-body">
-          <h5 class="card-title">Temperatura</h5>
+          <h5 class="card-title">Temperatura promedio diario</h5>
           <canvas id="chart1" style="width:100% ;height: 25vh"></canvas>
           <script type="module">
             function totalCasesChart(ctx) {
@@ -166,7 +166,7 @@
     <div class="col-md-4">
       <div class="card text-center">
         <div class="card-body">
-          <h5 class="card-title">Grados día</h5>
+          <h5 class="card-title">Grados día acumulados</h5>
           <canvas id="chart3" style="width:100% ;height: 25vh"></canvas>
 
           <script type="module">
@@ -425,8 +425,8 @@
             <thead>
               <tr>
                 <td>Fecha</td>
-                <td>Temperatura Promedio</td>
-                <td>Temperatura Proyectada</td>
+                <td>Temperatura promedio diario medida</td>
+                <td>Temperatura promedio diario proyectada</td>
               </tr>
 
             <tbody>
@@ -480,14 +480,14 @@
 
               {
 
-                label: "Temperatura Promedio",
+                label: "Temperatura promedio diario medida",
                 data: {{ tempPromedio| safe}},
               fill: false,
               borderColor: 'blue',
               lineTension: 0.1
                     },
               {
-                label: "Temperatura Proyectada",
+                label: "Temperatura promedio diario proyectada",
                 data: {{ tempPromedioProyectada| safe}},
               fill: false,
               borderColor: 'red',
@@ -627,7 +627,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h5 class="modal-title">Gráfico grados día</h5>
+          <h5 class="modal-title">Gráfico grados día acumulados</h5>
         </div>
         <div class="modal-body">
 
@@ -646,14 +646,14 @@
             datasets: [
               {
 
-                label: "Grados día Acumulado",
+                label: "Grados día acumulados",
                 data: {{ gradosDia| safe}},
               fill: false,
               borderColor: 'green',
               lineTension: 0.1
               },
               {
-                label: "Grados día Acumulado - Proyectada",
+                label: "Grados día acumulados - Proyectada",
                 data: {{ gradosDiaProyectada| safe}},
               fill: false,
               borderColor: 'red',
