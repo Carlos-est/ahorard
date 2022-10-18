@@ -363,7 +363,9 @@ def viewIndicadoresFloracion():
     gradosDiaProyectada = [row[4] for row in data]
     Humedad = [row[5] for row in data]
     HumedadProyectada = [row[6] for row in data]
-    print("estimacion de fecha de cosecha")
+    print("estimacion de fecha de cosecha", data)
+    print("grados dia", type([row[7] for row in data][0]))
+    print("Grados dia proyectado",[row[8] for row in data])
     #### AÑADIDO NUEVO #####
     if estimacion == 0:
         file_selector = 'viewIndicadoresFloracion-1.html'

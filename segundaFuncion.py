@@ -185,7 +185,7 @@ def EstimacionFechaCosecha(fec, estacion):
         HUM_acum += humedad
         temperatura = k["Datos"]["Temperatura_D"]
         TEMP_acum += temperatura
-        Vector_datos.append((fecha, round(temperatura,2),"--", round(GDA_acum,2),"--", round(humedad,2),"--"))
+        Vector_datos.append((fecha, round(temperatura,2),"--", round(GDA_acum,2),"--", round(humedad,2),"--", round(gdd,2),"--"))
         if GDA_acum >= 900:
             break#print("valor de k1:", k, "sumatoria:", GDA_acum)
     #print("GDA ACUMULADO PARA DESICIÓN::", GDA_acum) 
@@ -211,7 +211,7 @@ def EstimacionFechaCosecha(fec, estacion):
             fecha_next = fec + timedelta(datos_tomados+k)
             fecha_next = fecha_next.strftime("%d/%m/%Y")
             
-            Vector_datos.append((fecha_next,"--", round(temp_promedio,2),"--", round(GDA_acum,2),"--", round(hum_promedio,2)))
+            Vector_datos.append((fecha_next,"--", round(temp_promedio,2),"--", round(GDA_acum,2),"--", round(hum_promedio,2),"--", round(gda_promedio,2)))
 
         #print("Datos2:", Vector_datos)
         nSemanas=round((len(Vector_datos))/7, 1)
