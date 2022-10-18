@@ -160,12 +160,17 @@ def NumeroHojas(fec, estacion):
     NHojas14 = gdd14[0]["nHojas14"]
     NHojas28 = gdd28[0]["nHojas28"]
 
+    print("gdd28", gdd28)
+    print("gddTEST28", gdd_test_28)
+
     Vector_Grafica = []
+    GDA_acum = 0
     for k in gdd_test_28:
         fecha = k["Fecha_D_str"]
         temperatura = k["Datos"]["Temperatura_D"]
         gdd = k["Datos"]["GDD_D"]
-        Vector_Grafica.append((fecha, round(temperatura,2), round(gdd,2)))
+        GDA_acum += gdd
+        Vector_Grafica.append((fecha, round(temperatura,2), round(gdd,2), round(GDA_acum, 2)))
         #print("Fecha:", fecha, " ","Temperatura:", temperatura , " ", "GDD:", gdd)
     return NHojas14, NHojas28, Vector_Grafica
 
@@ -254,10 +259,12 @@ def NumeroHojasSemanas(fec, estacion, nrosemanas):
     NHojas = semana_gdd[0]["nHojas"]
 
     Vector_Grafica = []
+    GDA_acum = 0
     for k in semana_test:
         fecha = k["Fecha_D_str"]
         temperatura = k["Datos"]["Temperatura_D"]
         gdd = k["Datos"]["GDD_D"]
-        Vector_Grafica.append((fecha, round(temperatura,2), round(gdd,2)))
+        GDA_acum += gdd
+        Vector_Grafica.append((fecha, round(temperatura,2), round(gdd,2), round(GDA_acum, 2)))
         #print("Fecha:", fecha, " ","Temperatura:", temperatura , " ", "GDD:", gdd)
     return NHojas, Vector_Grafica

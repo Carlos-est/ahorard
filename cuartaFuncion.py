@@ -120,13 +120,13 @@ def nutrientes(fec, estacion, rPA, dias):
     
     biomasa = biomasa_planta*rPA
 
-    masaNitrogeno_planta = matSeca*(10000/rPA)*0.5*0.00828
-    masaPotasio_planta = matSeca*(10000/rPA)*0.5*0.0273
-    masaFosforo_planta = matSeca*(10000/rPA)*0.5*0.00031
+    masaNitrogeno_planta = matSeca*(10000/rPA)*0.3*0.00828
+    masaPotasio_planta = matSeca*(10000/rPA)*0.3*0.0273
+    masaFosforo_planta = matSeca*(10000/rPA)*0.3*0.00124
     
-    masaNitrogeno_hectarea = matSeca*(10000/rPA)*0.5*0.00828*(rPA/1000) 
-    masaPotasio_hectarea = matSeca*(10000/rPA)*0.5*0.0273*(rPA/1000)
-    masaFosforo_hectarea = matSeca*(10000/rPA)*0.5*0.00031*(rPA/1000)
+    masaNitrogeno_hectarea = matSeca*(10000/rPA)*0.3*0.00828*(rPA/1000) 
+    masaPotasio_hectarea = matSeca*(10000/rPA)*0.3*0.0273*(rPA/1000)
+    masaFosforo_hectarea = matSeca*(10000/rPA)*0.3*0.00124*(rPA/1000)
     Vector_datos = list(reversed(Vector_datos))
 
     return round(masaNitrogeno_planta,2), round(masaNitrogeno_hectarea,2), round(masaPotasio_planta,2), round(masaPotasio_hectarea,2), round(masaFosforo_planta,2), round(masaFosforo_hectarea,2), Vector_datos
