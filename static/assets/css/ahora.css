@@ -10722,7 +10722,7 @@ a:focus {
 }
 
 .sidebar .nav-item.active .nav-link {
-  font-weight: 700;
+  font-weight: 800;
 }
 
 .sidebar .nav-item .collapse {
@@ -10864,7 +10864,7 @@ a:focus {
   text-align: center;
   padding: 0 1rem;
   font-weight: 800;
-  font-size: 0.65rem;
+  font-size: 0.73rem;
 }
 
 .sidebar .sidebar-card {
@@ -11074,15 +11074,15 @@ a:focus {
 }
 
 .sidebar-dark .sidebar-heading {
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 1);
 }
 
 .sidebar-dark .nav-item .nav-link {
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(255, 255, 255, 1);
 }
 
 .sidebar-dark .nav-item .nav-link i {
-  color: rgba(255, 255, 255, 0.3);
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .sidebar-dark .nav-item .nav-link:active, .sidebar-dark .nav-item .nav-link:focus, .sidebar-dark .nav-item .nav-link:hover {

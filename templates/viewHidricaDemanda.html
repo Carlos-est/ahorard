@@ -40,7 +40,7 @@
         <div class="col-md-4">
             <div class="card text-center">
                 <div class="card-body">
-                    <h5 class="card-title">Evapotranspiración del cultivo</h5>
+                    <h5 class="card-title">Evapotranspiración diaria del cultivo</h5>
                     <canvas id="chartTemperaturaNroHojas" style="width:100% ;height: 25vh"></canvas>
                     <script type="module">
                         function totalCasesChart(ctx) {
@@ -179,7 +179,7 @@
         <div class="col-md-4">
             <div class="card text-center">
                 <div class="card-body">
-                    <h5 class="card-title">LLuvia (mm)</h5>
+                    <h5 class="card-title">LLuvia diaria (mm)</h5>
                     <canvas id="chartlluvias" style="width:100% ;height: 25vh"></canvas>
                     <script type="module">
                         function totalCasesChart(ctx) {
@@ -362,7 +362,7 @@
 
                         {
 
-                            label: "Evapotranspiración del cultivo",
+                            label: "Evapotranspiración diaria del cultivo",
                             data: {{ evap| safe}},
                         fill: false,
                         borderColor: 'blue',
@@ -524,7 +524,7 @@
 
                         {
 
-                            label: "Lluvia (mm)",
+                            label: "Lluvia diaria (mm)",
                             data: {{ rain| safe}},
                         fill: false,
                         borderColor: 'blue',

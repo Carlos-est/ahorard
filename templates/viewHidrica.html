@@ -33,7 +33,7 @@
       <div class="col-md-12 flex-column">
         <div class="alert alert-success alert-dismissible fade show p-2" role="alert">
           <h5>Para el periodo de {{dias}} dias finalizado el {{fechaFinal}} con un sistema de riego por {{riego}}
-            y suelo de textura {{suelo}}, hay que aplicar {{NH}}mm o {{NH2}} metros cúbicos de agua por
+            y suelo de textura {{suelo}}, hay que aplicar {{NH}}mm de agua por planta o {{NH2}} metros cúbicos de agua por
             hectárea </h5>
         </div>
 
@@ -62,7 +62,7 @@
 
               {
 
-                label: "Evapotranspiración del cultivo",
+                label: "Evapotranspiración diaria del cultivo",
                 data: {{ evap| safe}},
               fill: false,
               borderColor: 'blue',
@@ -173,7 +173,7 @@
 
               {
 
-                label: "Lluvia (mm)",
+                label: "Lluvia diaria (mm)",
                 data: {{ rain| safe}},
               fill: false,
               borderColor: 'blue',
@@ -335,7 +335,7 @@
 
           {
 
-          label: "Evapotranspiración del cultivo",
+          label: "Evapotranspiración diaria del cultivo",
           data: {{ evap| safe}},
           fill: false,
           borderColor: 'blue',
@@ -497,7 +497,7 @@
 
           {
 
-          label: "Lluvia (mm)",
+          label: "Lluvia diaria (mm)",
           data: {{ rain| safe}},
           fill: false,
           borderColor: 'blue',
