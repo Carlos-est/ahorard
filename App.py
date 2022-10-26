@@ -619,15 +619,15 @@ def viewHidricaIntervalo():
     estacionName=dict_estaciones[estacion] #BUSCA LA ESTACION 
     session['estacionName'] = estacionName
     # NH, data, evp_cultivo, turno_max  = quintaFuncion.nHidricaIntervalo(int(dias),fechaFinal,int(estacion),suelo, riego)
-    NH, evp_cultivo, turno_max  = quintaFuncion.nHidricaIntervalo(int(dias),fechaFinal,int(estacion),suelo, riego)
+    NH, data, evp_cultivo, turno_max  = quintaFuncion.nHidricaIntervalo(int(dias),fechaFinal,int(estacion),suelo, riego)
 
     # session['NH'] = str(NH)
-    # session['data'] = data
+    session['data'] = data
 
     # fechas = [row[0] for row in data]
     # evap = [row[1] for row in data]
     # rain = [row[2] for row in data]
-    # fechaFinal=data[-1][0]
+    fechaFinal=data[-1][0]
 
     # return render_template('viewHidricaIntervalo.html', riego=riego, rain=rain, suelo=suelo, fechas = fechas, evap=evap,data=data, estacionName = estacionName, dias=int(dias), fechaFinal=fechaFinal, turno_max=turno_max)
     return render_template('viewHidricaIntervalo.html', riego=riego, suelo=suelo, estacionName = estacionName, dias=int(dias), fechaFinal=fechaFinal, turno_max=turno_max)

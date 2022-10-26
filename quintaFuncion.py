@@ -478,6 +478,18 @@ def nHidricaIntervalo(dias, fec, estacion, tipo, tipo_riego):
     print("Fecha a ingresar a calculo:", fec_string_usuario)
     ##solicitamos datos
     datos=BD_MONGO_INTERVALO(dias, pais, estacion, fec_unix_usuario)
+
+    # print(datos)
+
+    #Obtención datos solo para gráficar y obtener la fecha final:
+    Vector_Grafica=[]
+
+    for k in datos:
+        fecha = k["Fecha_D_str"]
+        et = k["Datos"]["ET_D"]
+        inc_lluvia = k["Datos"]["Precipitacion_D"]
+        Vector_Grafica.append((fecha, round(et*1.1,2), round(inc_lluvia,2)))
+
     ###calculo
     ET_acc = 0
     precip_acc = 0
@@ -555,5 +567,5 @@ def nHidricaIntervalo(dias, fec, estacion, tipo, tipo_riego):
     # intervalo_70= (70+lluvia_efectiva)/prom_evp_cultivo
     # #print("intervalo 70:", intervalo_70)
     # return round(NH/10,2), Vector_Grafica, round(evp_cultivo,2), round(intervalo_30, 1), round(intervalo_50,1), round(intervalo_70,1)
-    return round(NH_total/10,2), round(evp_cultivo_total,2), round(turno_max_total, 1)
+    return round(NH_total/10,2), Vector_Grafica, round(evp_cultivo_total,2), round(turno_max_total, 1)
 
